@@ -5,6 +5,9 @@ edition = "2021"
 authors = ["Eric <skepz.dev@gmail.com>"]
 description = "A tool for sending large amounts of data over a network."
 license = "MIT"
-repository = ""
+repository = "https://github.com/Sk3pz/send-it"
+documentation = "https://docs.rs/send-it"
+keywords = ["send", "data", "varint"]
+categories = ["network-programming"]
 
 [dependencies]
