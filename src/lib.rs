@@ -130,4 +130,22 @@ mod tests {
         assert_eq!(data[0].to_string(), "Hello, ");
         assert_eq!(data[1].to_string(), "World!");
     }
+
+    #[test]
+    fn stress() {
+        let mut writer = crate::writer::VarWriter::new();
+
+        for x in 0..200 {
+            writer.add_string(format!("Hello, World! {}", x));
+        }
+
+        // fake writing stream
+        let mut stream: Vec<u8> = Vec::new();
+
+        writer.send(&mut stream).expect("failed to send the data");
+
+        let mut reader = crate::reader::VarReader::new(stream.as_slice());
+
+        let data = reader.read_data().unwrap();
+    }
 }

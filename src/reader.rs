@@ -69,6 +69,8 @@ impl<R: Read> VarReader<R> {
         let total_size = self.read_varint()?;
         let mut data = Vec::new();
 
+        println!("Total size to read: {}", total_size);
+
         while data.iter().map(|segment: &Segment| segment.len() + 4).sum::<usize>() < total_size {
             let segment_size = self.read_u32()? as usize;
             let mut segment_data = vec![0u8; segment_size];
