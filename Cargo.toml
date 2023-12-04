@@ -7,7 +7,11 @@ description = "A tool for sending large amounts of data over a network."
 license = "MIT"
 repository = "https://github.com/Sk3pz/send-it"
 documentation = "https://docs.rs/send-it"
-keywords = ["send", "data", "varint"]
-categories = ["network-programming"]
+keywords = ["send", "data", "variable-length", "encoding"]
+categories = ["network-programming", "encoding"]
 
-[dependencies]
+[features]
+default = ["writing", "reading"]
+writing = []
+reading = []
+big-endian = []

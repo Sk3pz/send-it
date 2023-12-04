@@ -1,23 +1,40 @@
-mod writer;
-mod reader;
+use std::fmt::Display;
 
+#[cfg(feature="writing")]
+pub mod writer;
+#[cfg(feature="reading")]
+pub mod reader;
+
+/// A segment of data used by VarReader and VarWriter to send and receive data over a stream.
+/// # Examples
+/// ```
+/// use send_it::Segment;
+///
+/// let mut segment = Segment::new();
+/// segment.append(Segment::from("Hello, "));
+/// segment.append(Segment::from("World!"));
+///
+/// assert_eq!(segment.to_string(), "Hello, World!");
+/// ```
 #[derive(Debug, Clone)]
 pub struct Segment {
     seg: Vec<u8>
 }
 
 impl Segment {
-    fn new() -> Self {
+    /// Creates a new Segment.
+    pub fn new() -> Self {
         Self {
             seg: Vec::new()
         }
     }
 
-    fn append(&mut self, seg: Segment) {
+    /// Appends a Segment to the end of this Segment.
+    pub fn append(&mut self, seg: Segment) {
         self.seg.extend(seg.seg);
     }
 
-    pub fn len(&self) -> usize {
+    pub(crate) fn len(&self) -> usize {
         self.seg.len()
     }
 }
@@ -52,9 +69,9 @@ impl From<String> for Segment {
     }
 }
 
-impl ToString for Segment {
-    fn to_string(&self) -> String {
-        String::from_utf8_lossy(&self.seg).to_string()
+impl Display for Segment {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", String::from_utf8_lossy(&self.seg).to_string())
     }
 }
 
@@ -62,36 +79,55 @@ mod tests {
 
     #[test]
     fn test_writer() {
-        let mut sender = crate::writer::VarSender::new();
+        // Create a new VarWriter
+        let mut writer = crate::writer::VarWriter::new();
 
         // Add some sample data
-        sender.add_string("Hello, ");
-        sender.add_string("World!");
+        writer.add_string("Hello, ");
+        writer.add_string("World!");
 
         // Use any Write implementor as your stream (e.g., File, TcpStream, etc.)
-        let mut writer: Vec<u8> = Vec::new();
-        sender.send(&mut writer).expect("Failed to send data");
+        let mut stream: Vec<u8> = Vec::new();
 
-        println!("Compressed data: {:?}", writer);
-        
-        println!("Compressed data (binary):");
-        for byte in &writer {
-            print!("{:08b}", byte);
-        }
-        println!();
+        // encode the data and send it over the stream
+        writer.send(&mut stream).expect("Failed to send data");
+    }
 
-        let mut reader = crate::reader::VarReader::new(writer.as_slice());
+    #[test]
+    fn test_reader() {
+        // Create a sample stream, this is the output from the above test_writer test
+        let stream: Vec<u8> = vec![21, 7, 0, 0, 0, 72, 101, 108, 108, 111, 44, 32, 6, 0, 0, 0, 87, 111, 114, 108, 100, 33];
 
-        match reader.read_data() {
-            Ok(original_data) => {
-                println!("Original data: {:?}", original_data);
-                for (x, seg) in original_data.iter().enumerate() {
-                    println!("Segment #{}: {}", x, seg.to_string());
-                }
-            }
-            Err(err) => {
-                eprintln!("Failed to read data: {:?}", err);
-            }
-        }
+        // create a new VarReader
+        let mut reader = crate::reader::VarReader::new(stream.as_slice());
+
+        // read the data from the stream
+        let data = reader.read_data().unwrap();
+        assert_eq!(data[0].to_string(), "Hello, ");
+        assert_eq!(data[1].to_string(), "World!");
+    }
+
+    #[test]
+    fn both_test() {
+        // Create a new VarWriter
+        let mut writer = crate::writer::VarWriter::new();
+
+        // Add some sample data
+        writer.add_string("Hello, ");
+        writer.add_string("World!");
+
+        // Use any Write implementor as your stream (e.g., File, TcpStream, etc.)
+        let mut stream: Vec<u8> = Vec::new();
+
+        // encode the data and send it over the stream
+        writer.send(&mut stream).expect("Failed to send data");
+
+        // create a new VarReader to read from the stream we wrote to
+        let mut reader = crate::reader::VarReader::new(stream.as_slice());
+
+        // read the data from the stream
+        let data = reader.read_data().unwrap();
+        assert_eq!(data[0].to_string(), "Hello, ");
+        assert_eq!(data[1].to_string(), "World!");
     }
 }
