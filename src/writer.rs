@@ -176,3 +176,9 @@ impl Write for VarWriter {
         Ok(())
     }
 }
+
+impl Default for VarWriter {
+    fn default() -> Self {
+        Self::new()
+    }
+}

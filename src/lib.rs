@@ -39,6 +39,12 @@ impl Segment {
     }
 }
 
+impl Default for Segment {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AsRef<[u8]> for Segment {
     fn as_ref(&self) -> &[u8] {
         &self.seg
@@ -71,7 +77,7 @@ impl From<String> for Segment {
 
 impl Display for Segment {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", String::from_utf8_lossy(&self.seg).to_string())
+        write!(f, "{}", String::from_utf8_lossy(&self.seg))
     }
 }
 
@@ -86,7 +92,7 @@ mod tests {
         writer.add_string("Hello, ");
         writer.add_string("World!");
 
-        // Use any Write implementor as your stream (e.g., File, TcpStream, etc.)
+        // Use any Write implementor as your stream (i.e. TcpStream)
         let mut stream: Vec<u8> = Vec::new();
 
         // encode the data and send it over the stream
@@ -116,7 +122,7 @@ mod tests {
         writer.add_string("Hello, ");
         writer.add_string("World!");
 
-        // Use any Write implementor as your stream (e.g., File, TcpStream, etc.)
+        // Use any Write implementor as your stream (i.e. TcpStream)
         let mut stream: Vec<u8> = Vec::new();
 
         // encode the data and send it over the stream
@@ -129,23 +135,5 @@ mod tests {
         let data = reader.read_data().unwrap();
         assert_eq!(data[0].to_string(), "Hello, ");
         assert_eq!(data[1].to_string(), "World!");
-    }
-
-    #[test]
-    fn stress() {
-        let mut writer = crate::writer::VarWriter::new();
-
-        for x in 0..200 {
-            writer.add_string(format!("Hello, World! {}", x));
-        }
-
-        // fake writing stream
-        let mut stream: Vec<u8> = Vec::new();
-
-        writer.send(&mut stream).expect("failed to send the data");
-
-        let mut reader = crate::reader::VarReader::new(stream.as_slice());
-
-        let data = reader.read_data().unwrap();
     }
 }

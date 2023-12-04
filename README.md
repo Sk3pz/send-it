@@ -15,7 +15,7 @@ let mut writer = VarWriter::new();
 writer.add_string("Hello, ");
 writer.add_string("World!");
 
-// Use any Write implementor as your stream (e.g., File, TcpStream, etc.)
+// Use any Write implementor as your stream (i.e. TcpStream)
 let mut stream: Vec<u8> = Vec::new();
 
 // encode the data and send it over the stream
@@ -52,7 +52,7 @@ let mut writer = VarWriter::new();
 writer.add_string("Hello, ");
 writer.add_string("World!");
 
-// Use any Write implementor as your stream (e.g., File, TcpStream, etc.)
+// Use any Write implementor as your stream (i.e. TcpStream)
 let mut stream: Vec<u8> = Vec::new();
 
 // encode the data and send it over the stream

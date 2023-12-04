@@ -1,14 +1,14 @@
 [package]
 name = "send-it"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Eric <skepz.dev@gmail.com>"]
-description = "A tool for sending large amounts of data over a network."
+description = "A tool for sending large amounts of data over a stream or network."
 license = "MIT"
 repository = "https://github.com/Sk3pz/send-it"
 documentation = "https://docs.rs/send-it"
-keywords = ["send", "data", "variable-length", "encoding"]
-categories = ["network-programming", "encoding"]
+keywords = ["send", "data", "variable-length"]
+categories = ["network-programming"]
 
 [features]
 default = ["writing", "reading"]
