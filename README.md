@@ -5,8 +5,11 @@ A rust crate for sending large segments of data over a stream or network using v
 
 ## Example
 ```rust
+use send_it::writer::VarWriter;
+use send_it::reader::VarReader;
+
 // Create a new VarWriter
-let mut writer = crate::writer::VarWriter::new();
+let mut writer = VarWriter::new();
 
 // Add some sample data
 writer.add_string("Hello, ");
@@ -19,7 +22,7 @@ let mut stream: Vec<u8> = Vec::new();
 writer.send(&mut stream).expect("Failed to send data");
 
 // create a new VarReader to read from the stream we wrote to
-let mut reader = crate::reader::VarReader::new(stream.as_slice());
+let mut reader = VarReader::new(stream.as_slice());
 
 // read the data from the stream
 let data = reader.read_data().unwrap();
@@ -40,8 +43,10 @@ Changes the encoding to use big-endian instead of little-endian
 A struct used to write data to a stream using variable-length encoding\
 feature: 'writing' (enabled by default)
 ```rust
+use send_it::writer::VarWriter;
+
 // Create a new VarWriter
-let mut writer = crate::writer::VarWriter::new();
+let mut writer = VarWriter::new();
 
 // Add some sample data
 writer.add_string("Hello, ");
@@ -58,11 +63,13 @@ writer.send(&mut stream).expect("Failed to send data");
 A struct used to read data from a stream using variable-length encoding\
 feature: 'reading' (enabled by default)
 ```rust
+use send_it::reader::VarReader;
+
 // Create a sample stream, this is the output from the above VarWriter example
 let stream: Vec<u8> = vec![21, 7, 0, 0, 0, 72, 101, 108, 108, 111, 44, 32, 6, 0, 0, 0, 87, 111, 114, 108, 100, 33];
 
 // create a new VarReader
-let mut reader = crate::reader::VarReader::new(stream.as_slice());
+let mut reader = VarReader::new(stream.as_slice());
 
 // read the data from the stream
 let data = reader.read_data().unwrap();
