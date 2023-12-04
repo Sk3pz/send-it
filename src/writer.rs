@@ -1,22 +1,27 @@
 use std::io::Write;
+use crate::Segment;
 
-pub struct DataWriteBuffer {
-    data: Vec<Vec<u8>>,
+pub struct VarSender {
+    data: Vec<Segment>,
 }
 
-impl DataWriteBuffer {
-    pub fn new() -> DataWriteBuffer {
-        DataWriteBuffer {
+impl VarSender {
+    pub fn new() -> VarSender {
+        VarSender {
             data: Vec::new(),
         }
     }
     
-    pub fn add_segment(&mut self, segment: Vec<u8>) {
+    pub fn add(&mut self, segment: Segment) {
         self.data.push(segment);
     }
     
-    pub fn add(&mut self, raw: &[u8]) {
-        self.data.push(raw.to_vec());
+    pub fn add_string<S: Into<String>>(&mut self, string: S) {
+        self.add(Segment::from(string.into()))
+    }
+
+    pub fn add_raw(&mut self, raw: &[u8]) {
+        self.data.push(Segment::from(raw));
     }
 
     // send data over a given stream using the varint format
@@ -29,7 +34,8 @@ impl DataWriteBuffer {
         // Write each segment's size and the segment itself
         for segment in &self.data {
             self.write_u32(stream, segment.len() as u32)?;
-            stream.write_all(segment)?;
+            // write the segment
+            stream.write_all(segment.as_ref())?;
         }
 
         // Clear the internal data after sending
@@ -68,11 +74,11 @@ impl DataWriteBuffer {
     }
 }
 
-impl std::io::Write for DataWriteBuffer {
+impl std::io::Write for VarSender {
     fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
         let vec = buf.to_vec();
         let size = vec.len();
-        self.data.push(vec);
+        self.data.push(Segment::from(vec));
         Ok(size)
     }
 
