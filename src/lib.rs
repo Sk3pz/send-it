@@ -103,9 +103,11 @@ mod tests {
     fn test_reader() {
         // Create a sample stream, this is the output from the above test_writer test
         let stream: Vec<u8> = vec![21, 7, 0, 0, 0, 72, 101, 108, 108, 111, 44, 32, 6, 0, 0, 0, 87, 111, 114, 108, 100, 33];
+        // turn the vector into a slice as Vec does not implement Read
+        let mut fake_stream = stream.as_slice();
 
         // create a new VarReader
-        let mut reader = crate::reader::VarReader::new(stream.as_slice());
+        let mut reader = crate::reader::VarReader::new(&mut fake_stream);
 
         // read the data from the stream
         let data = reader.read_data().unwrap();
@@ -128,8 +130,11 @@ mod tests {
         // encode the data and send it over the stream
         writer.send(&mut stream).expect("Failed to send data");
 
-        // create a new VarReader to read from the stream we wrote to
-        let mut reader = crate::reader::VarReader::new(stream.as_slice());
+        // turn the vector into a slice as Vec does not implement Read
+        let mut fake_stream = stream.as_slice();
+
+        // create a new VarReader
+        let mut reader = crate::reader::VarReader::new(&mut fake_stream);
 
         // read the data from the stream
         let data = reader.read_data().unwrap();

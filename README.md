@@ -21,8 +21,11 @@ let mut stream: Vec<u8> = Vec::new();
 // encode the data and send it over the stream
 writer.send(&mut stream).expect("Failed to send data");
 
+// turn the vector into a slice as Vec does not implement Read
+let mut fake_stream = stream.as_slice();
+
 // create a new VarReader to read from the stream we wrote to
-let mut reader = VarReader::new(stream.as_slice());
+let mut reader = VarReader::new(&mut fake_stream);
 
 // read the data from the stream
 let data = reader.read_data().unwrap();
@@ -67,9 +70,11 @@ use send_it::reader::VarReader;
 
 // Create a sample stream, this is the output from the above VarWriter example
 let stream: Vec<u8> = vec![21, 7, 0, 0, 0, 72, 101, 108, 108, 111, 44, 32, 6, 0, 0, 0, 87, 111, 114, 108, 100, 33];
+// turn the vector into a slice as Vec does not implement Read
+let mut fake_stream = stream.as_slice();
 
 // create a new VarReader
-let mut reader = VarReader::new(stream.as_slice());
+let mut reader = VarReader::new(&mut fake_stream);
 
 // read the data from the stream
 let data = reader.read_data().unwrap();
