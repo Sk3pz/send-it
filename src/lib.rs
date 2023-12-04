@@ -93,7 +93,7 @@ mod tests {
         let mut writer = crate::writer::VarWriter::new();
 
         // Add some sample data
-        writer.add_string("Hello, ");let mut writer = VarWriter::default();
+        writer.add_string("Hello, ");
         writer.add_string("World!");
 
         // Use any Write implementor as your stream (i.e. TcpStream)
@@ -144,22 +144,5 @@ mod tests {
         let data = reader.read_data().unwrap();
         assert_eq!(data[0].to_string(), "Hello, ");
         assert_eq!(data[1].to_string(), "World!");
-    }
-
-    #[test]
-    fn server_test() {
-        let listener = std::net::TcpListener::bind("0.0.0.0:3333").expect("Failed to start tcp listener!");
-
-        for stream in listener.incoming() {
-            let mut stream = stream.expect("Invalid stream!");
-
-            std::thread::spawn(move || {
-                let mut reader = crate::reader::VarReader::new(&mut stream);
-                reader.read_loop(|data| {
-                    println!("Data: {:?}", data);
-                });
-                println!("Connection closed!");
-            });
-        }
     }
 }
