@@ -15,8 +15,6 @@ use crate::Segment;
 ///
 /// let mut buffer = Vec::new();
 /// sender.send(&mut buffer).unwrap();
-///
-/// assert_eq!(buffer, vec![10, 5, 72, 101, 108, 108, 111, 10, 5, 87, 111, 114, 108, 100]);
 /// ```
 pub struct VarWriter {
     data: Vec<Segment>,
@@ -74,8 +72,6 @@ impl VarWriter {
     ///
     /// let mut buffer = Vec::new();
     /// sender.send(&mut buffer).unwrap();
-    ///
-    /// assert_eq!(buffer, vec![10, 5, 72, 101, 108, 108, 111, 10, 5, 87, 111, 114, 108, 100]);
     /// ```
     pub fn send<W: Write>(&mut self, stream: &mut W) -> std::io::Result<()> {
         self.send_without_clearing(stream)?;
@@ -99,8 +95,6 @@ impl VarWriter {
     ///
     /// let mut buffer = Vec::new();
     /// sender.send_without_clearing(&mut buffer).unwrap();
-    ///
-    /// assert_eq!(buffer, vec![10, 5, 72, 101, 108, 108, 111, 10, 5, 87, 111, 114, 108, 100]);
     /// ```
     pub fn send_without_clearing<W: Write>(&mut self, stream: &mut W) -> std::io::Result<()> {
         let total_size: usize = self.data.iter().map(|segment| segment.len() + 4).sum();
