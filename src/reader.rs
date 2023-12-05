@@ -65,7 +65,12 @@ impl<'a, R: Read> VarReader<'a, R> {
     /// ```
     /// use send_it::reader::VarReader;
     ///
-    /// let mut reader = VarReader::new(&[10, 5, 72, 101, 108, 108, 111, 10, 5, 87, 111, 114, 108, 100][..]);
+    /// let stream: Vec<u8> = vec![21, 7, 0, 0, 0, 72, 101, 108, 108, 111, 44, 32, 6, 0, 0, 0, 87, 111, 114, 108, 100, 33];
+    /// // turn the vector into a slice as Vec does not implement Read
+    /// let mut fake_stream = stream.as_slice();
+    ///
+    /// // create a new VarReader
+    /// let mut reader = crate::reader::VarReader::new(&mut fake_stream);
     ///
     /// let data = reader.read_data().unwrap();
     /// assert_eq!(data[0].to_string(), "Hello");
