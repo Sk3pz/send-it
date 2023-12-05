@@ -1,6 +1,6 @@
 [package]
 name = "send-it"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["Eric <skepz.dev@gmail.com>"]
 description = "A tool for sending large amounts of data over a stream or network."

@@ -1,7 +1,7 @@
 # Send-it
 [![Crates.io](https://img.shields.io/crates/v/send-it.svg)](https://crates.io/crates/send-it)
 [![Docs.rs](https://docs.rs/send-it/badge.svg)](https://docs.rs/send-it)\
-A rust crate for sending large segments of data over a stream or network using variable-length encoding.
+A rust crate for sending multiple segments of information together over a stream using variable length encoding.
 
 ## Example
 ```rust
@@ -35,7 +35,7 @@ assert_eq!(data[1].to_string(), "World!");
 
 ## Features
 #### writing (enabled by default)
-Adds the VarWriter struct, which is used to write data to a stream using variable-length encodingq
+Adds the VarWriter struct, which is used to write data to a stream using variable-length encoding
 #### reading (enabled by default)
 Adds the VarReader struct, which is used to read data from a stream using variable-length encoding
 #### big-endian (disabled by default)
