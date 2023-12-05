@@ -1,7 +1,5 @@
 use send_it::Segment;
 
-
-
 fn main() {
     // create a TcpListener
     let listener = std::net::TcpListener::bind("0.0.0.0:3333").expect("Failed to start tcp listener!");

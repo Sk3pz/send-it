@@ -1,5 +1,3 @@
-
-
 fn main() {
     // create a connection to our example server in server.rs
     let mut connection = std::net::TcpStream::connect("localhost:3333").expect("Failed to connect to server!");
