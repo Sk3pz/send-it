@@ -41,6 +41,11 @@ impl Segment {
     pub(crate) fn len(&self) -> usize {
         self.seg.len()
     }
+
+    pub fn to_raw(&self) -> Vec<u8> {
+        self.seg.clone()
+    }
+    
 }
 
 impl Default for Segment {
