@@ -1,7 +1,8 @@
 # Send-it
 [![Crates.io](https://img.shields.io/crates/v/send-it.svg)](https://crates.io/crates/send-it)
 [![Docs.rs](https://docs.rs/send-it/badge.svg)](https://docs.rs/send-it)\
-A rust crate for sending multiple segments of information together over a stream using variable length encoding.
+A rust crate for sending multiple segments of information together over a stream using variable length encoding.  
+\* _this does not compress or encrypt the data. It turns the data into a stream of bytes and adds length information about each segment_
 
 ## Example
 ```rust
