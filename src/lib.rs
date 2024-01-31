@@ -1,9 +1,18 @@
 use std::fmt::Display;
 
 #[cfg(feature="writing")]
+#[cfg(not(feature="tokio"))]
 pub mod writer;
 #[cfg(feature="reading")]
+#[cfg(not(feature="tokio"))]
 pub mod reader;
+
+#[cfg(feature="writing")]
+#[cfg(feature="tokio")]
+mod async_writer;
+#[cfg(feature="reading")]
+#[cfg(feature="tokio")]
+mod async_reader;
 
 /// A segment of data used by VarReader and VarWriter to send and receive data over a stream.
 /// # Examples
